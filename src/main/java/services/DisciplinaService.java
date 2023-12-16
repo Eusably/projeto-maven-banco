@@ -9,6 +9,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -29,9 +30,15 @@ public class DisciplinaService {
 	}
 	
 	@GET
-	@Path("/{codigo}")
-	public Response consultar(@PathParam("codigo") String codigo) {
+	@Path("/consultar")
+	public Response consultar(@QueryParam("codigo") String codigo) {
 		return Response.ok().entity(this.disciplinaRepository.consultar(codigo)).build();
+	}
+	
+	@GET
+	@Path("/consultar-alunos")
+	public Response consultarAlunos(@QueryParam("codigo") String codigo) {
+		return Response.ok().entity(this.disciplinaRepository.consultarAlunos(codigo)).build();
 	}
 
 	@POST
@@ -46,7 +53,7 @@ public class DisciplinaService {
 
 	/*{
 	    "codigo": "PROG001",
-	    "descrição": "Programação 001",
+	    "descricao": "Programação 001",
 	    "professor": "Daiane Dorner"
 	}*/
 	@PUT
@@ -60,8 +67,7 @@ public class DisciplinaService {
 	}
 
 	@DELETE
-	@Path("/{codigo}")
-	public Response remover(@PathParam("codigo") String codigo) {
+	public Response remover(@QueryParam("codigo") String codigo) {
 		try {
 			this.disciplinaRepository.remover(codigo);
 			return Response.ok().build();

@@ -5,17 +5,13 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.transaction.Transactional;
 
+import model.Aluno;
 import model.Disciplina;
 import repository.base.AbstractCrudRepository;
 
 @Stateless
 public class DisciplinaRepository extends AbstractCrudRepository<Disciplina>{
 	
-	/*{
-	    "codigo": "PORT001",
-	    "descrição": "Português",
-	    "professor": "Daiane Dorner"
-	}*/
 	@Transactional
 	public void cadastrar(Disciplina disciplina) throws Exception {
 		if(this.consultar(disciplina.getCodigo()) == null) {
@@ -47,5 +43,16 @@ public class DisciplinaRepository extends AbstractCrudRepository<Disciplina>{
 	public Disciplina consultar(String codigo) {
 		List<Disciplina> lista = super.em.createQuery("from Disciplina where codigo = :codigo").setParameter("codigo", codigo).getResultList();
 		return lista != null && !lista.isEmpty() ? lista.get(0) : null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Aluno> consultarAlunos(String codigo) {
+		return super.em.createNativeQuery("select a.* from eusably.matricula m \n"
+				+ "join eusably.disciplina d on d.codigo = m.codigo_disciplina \n"
+				+ "join eusably.aluno a on a.id = m.id_aluno \n"
+				+ "where d.codigo = :codigo \n"
+				+ "order by a.nome", Aluno.class)
+				.setParameter("codigo", codigo)
+				.getResultList();
 	}
 }

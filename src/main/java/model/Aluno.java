@@ -1,11 +1,13 @@
 package model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -45,9 +47,10 @@ public class Aluno implements Serializable {
 	@Column(name = "sexo")
 	private String sexo;
 
-	@ManyToMany
-	@JoinTable(name = "matricula", joinColumns = @JoinColumn(name = "codigo_disciplina"), inverseJoinColumns = @JoinColumn(name = "id_aluno"))
-	private Set<Disciplina> disciplinas;
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "matricula", schema="eusably", joinColumns = 
+		@JoinColumn(name = "id_aluno"), inverseJoinColumns = @JoinColumn(name = "codigo_disciplina"))
+	private Set<Disciplina> disciplinas = new HashSet<>();
 
 	public Integer getId() {
 		return id;
